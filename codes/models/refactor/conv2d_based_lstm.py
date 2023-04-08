@@ -48,6 +48,4 @@ class Conv2dBasedLSTM(nn.Module):
             out.append(x)
             history.append(state)
 
-        if not self.return_all_layers:
-            return out[-1:], history[-1:]
-        return out, history
+        return x, (out, history) if self.return_all_layers else (out[-1:], history[-1:])

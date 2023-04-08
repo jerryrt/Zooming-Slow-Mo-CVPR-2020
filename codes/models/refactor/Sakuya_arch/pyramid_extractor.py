@@ -14,7 +14,8 @@ class PyramidExtractor(nn.Module):
             nn.Sequential(Conv2dNormActivation(multiplier, multiplier, stride=2, **common_kwargs),
                           Conv2dNormActivation(multiplier, multiplier, stride=1, **common_kwargs)),
             nn.Sequential(Conv2dNormActivation(multiplier, multiplier, stride=2, **common_kwargs),
-                          Conv2dNormActivation(multiplier, multiplier, stride=1, **common_kwargs))])
+                          Conv2dNormActivation(multiplier, multiplier, stride=1, **common_kwargs))
+        ])
 
     def forward(self, x):
         pyramid = [x]

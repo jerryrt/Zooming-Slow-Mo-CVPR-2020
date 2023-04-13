@@ -38,5 +38,5 @@ class ResidualBlockNoBN(nn.Module):
         out = self.conv2(out)
         return identity + out
 
-# from torchvision.models.resnet import BasicBlock
+# from torchvision.modules-.resnet import BasicBlock
 # ResidualBlock_noBN = BasicBlock

@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 from .conv2d_based_lstm_cell import Conv2dBasedLSTMCell
 
@@ -33,8 +32,8 @@ class Conv2dBasedLSTM(nn.Module):
                              device=device,
                              dtype=dtype)
         self.modules = nn.ModuleList([Conv2dBasedLSTMCell(in_channels, out_channels, **common_kwargs)])
-        self.modules.extend([Conv2dBasedLSTMCell(out_channels, out_channels, **common_kwargs)
-                             for _ in range(self.num_layers - 1)])
+        for _ in range(self.num_layers - 1):
+            self.modules.append(Conv2dBasedLSTMCell(out_channels, out_channels, **common_kwargs))
 
     def forward(self, x, hidden_state=None):
         out, history = [], []
@@ -44,7 +43,8 @@ class Conv2dBasedLSTM(nn.Module):
             for t in range(len(x)):
                 state = module(x[t], state)
                 cycle_out.append(state[0])
-            x = torch.stack(cycle_out, dim=0)
+            # x = torch.stack(cycle_out, dim=0)
+            x = cycle_out
             out.append(x)
             history.append(state)
 

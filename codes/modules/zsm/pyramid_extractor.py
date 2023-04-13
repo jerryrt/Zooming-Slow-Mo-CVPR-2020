@@ -1,15 +1,13 @@
 import torch.nn as nn
+from .functional import LeakyReLU1EM1
 from torchvision.ops import Conv2dNormActivation
 
 
 class PyramidExtractor(nn.Module):
     def __init__(self, multiplier):
         super(PyramidExtractor, self).__init__()
-        common_kwargs = dict(kernel_size=3,
-                             padding=1,
-                             bias=True,
-                             norm_layer=None,
-                             activation_layer=nn.LeakyReLU(negative_slope=0.1, inplace=True))
+        conv2d_kwargs = dict(kernel_size=3, padding=1, bias=True)
+        common_kwargs = dict(**conv2d_kwargs, norm_layer=None, activation_layer=LeakyReLU1EM1)
         self.levels = nn.ModuleList([
             nn.Sequential(Conv2dNormActivation(multiplier, multiplier, stride=2, **common_kwargs),
                           Conv2dNormActivation(multiplier, multiplier, stride=1, **common_kwargs)),

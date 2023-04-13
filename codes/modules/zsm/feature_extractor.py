@@ -1,7 +1,7 @@
 import torch.nn as nn
-from codes.models.refactor.Sakuya_arch.residual_block_no_bn import ResidualBlockNoBN as Block
-# from .residual_block_no_bn import ResidualBlockNoBN as Block
 from torchvision.ops import Conv2dNormActivation
+from .functional import LeakyReLU1EM1
+from .residual_block_no_bn import ResidualBlockNoBN as Block
 
 
 class FeatureExtractor(nn.Sequential):
@@ -14,10 +14,6 @@ class FeatureExtractor(nn.Sequential):
                                  padding=1,
                                  bias=True,
                                  norm_layer=None,
-                                 activation_layer=nn.LeakyReLU(negative_slope=0.1, inplace=True)),
+                                 activation_layer=LeakyReLU1EM1),
             *[Block(multiplier) for _ in range(n_blocks)]
         )
-
-
-if __name__ == "__main__":
-    FeatureExtractor(3, 64, 5)

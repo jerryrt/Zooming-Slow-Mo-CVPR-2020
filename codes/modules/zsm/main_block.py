@@ -1,6 +1,5 @@
-import torch
-from codes.models.refactor.conv2d_based_lstm import Conv2dBasedLSTM
-from codes.models.refactor.Sakuya_arch.easy_fusion import EasyFusion
+from ..conv2d_based_lstm import Conv2dBasedLSTM
+from .easy_fusion import EasyFusion
 
 
 class MainBlock(Conv2dBasedLSTM):
@@ -48,7 +47,8 @@ class MainBlock(Conv2dBasedLSTM):
                 state = self.fusion_h(x[t], state[0]), self.fusion_c(x[t], state[1])
                 state = module(x[t], state)
                 cycle_out.append(state[0])
-            x = torch.stack(cycle_out, dim=0)
+            # x = torch.stack(cycle_out, dim=0)
+            x = cycle_out
             out.append(x)
             history.append(state)
 

@@ -4,6 +4,7 @@ from .functional import LeakyReLU1EM1
 from .residual_block_no_bn import ResidualBlockNoBN as Block
 
 
+#TODO: maybe move back into zsm
 class FeatureExtractor(nn.Sequential):
     def __init__(self, in_channels, multiplier, n_blocks):
         super(FeatureExtractor, self).__init__(

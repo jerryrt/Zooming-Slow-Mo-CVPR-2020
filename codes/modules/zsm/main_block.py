@@ -1,3 +1,5 @@
+import torch
+
 from ..conv2d_based_lstm import Conv2dBasedLSTM
 from .easy_fusion import EasyFusion
 
@@ -40,8 +42,11 @@ class MainBlock(Conv2dBasedLSTM):
 
     def forward(self, x, hidden_state=None):
         out, history = [], []
-        for i, module in enumerate(self.modules):
-            state = None if hidden_state is None else hidden_state[i]
+        for i, module in enumerate(self.cells):
+            state = torch.zeros(*(2, x[0].size(0), self.out_channels, *x[0].size()[2:]),
+                                requires_grad=False,
+                                device=x[0].device,
+                                dtype=x[0].dtype) if hidden_state is None else hidden_state[i]
             cycle_out = []
             for t in range(len(x)):
                 state = self.fusion_h(x[t], state[0]), self.fusion_c(x[t], state[1])

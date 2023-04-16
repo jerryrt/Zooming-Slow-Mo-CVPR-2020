@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from .conv2d_based_lstm_cell import Conv2dBasedLSTMCell
 
@@ -22,6 +23,9 @@ class Conv2dBasedLSTM(nn.Module):
 
         self.return_all_layers = return_all_layers
         self.num_layers = num_layers
+        self.out_channels = out_channels
+        self.device = device
+        self.dtype = dtype
         common_kwargs = dict(kernel_size=kernel_size,
                              stride=stride,
                              padding=padding,
@@ -31,14 +35,17 @@ class Conv2dBasedLSTM(nn.Module):
                              padding_mode=padding_mode,
                              device=device,
                              dtype=dtype)
-        self.modules = nn.ModuleList([Conv2dBasedLSTMCell(in_channels, out_channels, **common_kwargs)])
+        self.cells = nn.ModuleList([Conv2dBasedLSTMCell(in_channels, out_channels, **common_kwargs)])
         for _ in range(self.num_layers - 1):
-            self.modules.append(Conv2dBasedLSTMCell(out_channels, out_channels, **common_kwargs))
+            self.cells.append(Conv2dBasedLSTMCell(out_channels, out_channels, **common_kwargs))
 
     def forward(self, x, hidden_state=None):
         out, history = [], []
-        for i, module in enumerate(self.modules):
-            state = None if hidden_state is None else hidden_state[i]
+        for i, module in enumerate(self.cells):
+            state = torch.zeros(*(2, x[0].size(0), self.out_channels, *x[0].size()[2:]),
+                                requires_grad=False,
+                                device=x[0].device,
+                                dtype=x[0].dtype) if hidden_state is None else hidden_state[i]
             cycle_out = []
             for t in range(len(x)):
                 state = module(x[t], state)

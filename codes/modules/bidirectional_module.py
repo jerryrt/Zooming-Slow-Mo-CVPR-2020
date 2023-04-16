@@ -9,5 +9,7 @@ class BidirectionalModule(nn.Module):
 
     def forward(self, x):
         out = self.module(x)
-        tuo = self.module(torch.flip(x, dims=[0]))
-        return torch.cat((out, torch.flip(tuo, dims=[0])), dim=2)
+        tuo = self.module(x[::-1]) if isinstance(x, list) else self.module(torch.flip(x, dims=[0]))
+        # return torch.cat((out, torch.flip(tuo, dims=[0])), dim=2)
+        n = len(out)
+        return [torch.cat((out[i], tuo[n-i-1]), dim=1) for i in range(n)]

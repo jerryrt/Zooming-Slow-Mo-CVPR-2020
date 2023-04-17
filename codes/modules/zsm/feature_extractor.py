@@ -1,7 +1,6 @@
 import torch.nn as nn
 from torchvision.ops import Conv2dNormActivation
-from .functional import LeakyReLU1EM1
-from .residual_block_no_bn import ResidualBlockNoBN as Block
+from .functional import LeakyReLU1EM1, ResidualBlockNoBN as Block
 
 
 #TODO: maybe move back into zsm

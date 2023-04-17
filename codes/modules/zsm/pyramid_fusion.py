@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from .functional import LeakyReLU1EM1
+from .functional import LeakyReLU1EM1_
 from .warp_net import WarpNet
 from torchvision.ops import Conv2dNormActivation
 
@@ -9,7 +9,7 @@ class PyramidFusion(nn.Module):
     def __init__(self, multiplier=64, groups=8, num_levels=3):
         super(PyramidFusion, self).__init__()
         conv2d_kwargs = dict(kernel_size=3, stride=1, padding=1, bias=True)
-        common_kwargs = dict(**conv2d_kwargs, norm_layer=None, activation_layer=LeakyReLU1EM1)
+        common_kwargs = dict(**conv2d_kwargs, norm_layer=None, activation_layer=LeakyReLU1EM1_)
 
         self.offsets_fusions = nn.ModuleList([
             nn.Sequential(Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs),
@@ -41,7 +41,7 @@ class PyramidFusion(nn.Module):
                                             for _ in range(num_levels)])
         self.output_fusion = nn.ModuleList([Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs)
                                             for _ in range(num_levels - 1)])
-        self.leaky_relu01 = LeakyReLU1EM1()
+        self.leaky_relu01 = LeakyReLU1EM1_()
 
     def forward(self, pyramid_a, pyramid_b):
         residual_offsets = []

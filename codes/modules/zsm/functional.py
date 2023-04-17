@@ -5,7 +5,7 @@ import torch.nn.functional as F
 # from torchvision.modules.resnet import BasicBlock
 # ResidualBlock_noBN = BasicBlock
 
-LeakyReLU1EM1 = functools.partial(nn.LeakyReLU, negative_slope=0.1, inplace=True)
+LeakyReLU1EM1_ = functools.partial(nn.LeakyReLU, negative_slope=0.1, inplace=True)
 
 
 def initialize_weights(net_l, scale=1):

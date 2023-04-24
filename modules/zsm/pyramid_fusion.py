@@ -39,8 +39,8 @@ class PyramidFusion(nn.Module):
                                                     padding=1,
                                                     deformable_groups=groups)
                                             for _ in range(num_levels)])
-        self.output_fusion = nn.ModuleList([Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs)
-                                            for _ in range(num_levels - 1)])
+        self.output_fusion = nn.ModuleList([Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs),
+                                            nn.Conv2d(multiplier * 2, multiplier, **conv2d_kwargs)])
         self.leaky_relu01 = LeakyReLU1EM1_()
 
     def forward(self, pyramid_a, pyramid_b):
@@ -57,8 +57,23 @@ class PyramidFusion(nn.Module):
             x = fusion(x)
             offsets.append(x)
 
-        pyramid = [warp(level, offsets) for warp, level, offsets in zip(self.warp_networks, pyramid_a, offsets)]
+        # import numpy as np
+        # l1 = np.load("L1_offset.npy")
+        # l2 = np.load("L2_offset.npy")
+        # l3 = np.load("L3_offset.npy")
+        #
+        # l1_pa = np.load("L1_fea_pyr.npy")
+        # l2_pa = np.load("L2_fea_pyr.npy")
+        # l3_pa = np.load("L3_fea_pyr.npy")
+        # raw1 = np.load("L1_fea_raw.npy")
+        # raw2 = np.load("L2_fea_raw.npy")
+        # raw3 = np.load("L3_fea.npy")
+        #
+        # fea1 = np.load("L1_fea.npy")
+        # fea2 = np.load("L2_fea.npy")
+        # fea3 = np.load("L3_fea.npy")
 
+        pyramid = [warp(level, offset) for warp, level, offset in zip(self.warp_networks, pyramid_a, offsets)]
         x = self.leaky_relu01(pyramid[0])
         for fusion, level in zip(self.output_fusion, pyramid[1:]):
             x = self.upsample2x(x)

@@ -1,4 +1,4 @@
-from codes.modules.zsm.main_block import MainBlock
+from modules.zsm.main_block import MainBlock
 from .conv import adapt_conv
 from .easy_fusion import adapt_easy_fusion
 

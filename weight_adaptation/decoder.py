@@ -1,10 +1,9 @@
+from modules.zsm import ZSM
 from .conv import adapt_conv
-from codes.modules.zsm.resnet_based_generator import ResnetBasedGenerator as Generator
-from codes.modules.zsm import ZSM
 
 
 def adapt_decoder(weights):
-    generator = ZSM(3,3).decoder
+    generator = ZSM(3, 3).decoder
     for i in range(40):
         generator[i].conv1.load_state_dict(adapt_conv(weights, f"recon_trunk.{i}.conv1"))
         generator[i].conv2.load_state_dict(adapt_conv(weights, f"recon_trunk.{i}.conv2"))

@@ -50,7 +50,6 @@ class Conv2dBasedLSTM(nn.Module):
             for t in range(len(x)):
                 state = module(x[t], state)
                 cycle_out.append(state[0])
-            # x = torch.stack(cycle_out, dim=0)
             x = cycle_out
             out.append(x)
             history.append(state)

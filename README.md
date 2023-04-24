@@ -16,7 +16,7 @@ This is the official Pytorch implementation of _Zooming Slow-Mo: Fast and Accura
   <tr>
     <td colspan="2">
       <a href="https://youtu.be/8mgD8JxBOus">
-        <img src="dump/demo720.gif" alt="Demo GIF">
+        <img src="src/dump/demo720.gif" alt="Demo GIF">
         </img>
       </a>
     </td>
@@ -53,14 +53,13 @@ In Zooming Slow-Mo, we firstly temporally interpolate features of the missing LR
 
 Zooming Slow-Mo achieves state-of-the-art performance by PSNR and SSIM in Vid4, Vimeo test sets.
 
-![framework](./dump/framework.png)
+![framework](./src/dump/framework.png)
 
 ## Prerequisites
 
 - Python 3 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux))
-- [PyTorch >= 1.1](https://pytorch.org/)
+- [PyTorch >= 1.8](https://pytorch.org/)
 - NVIDIA GPU + [CUDA](https://developer.nvidia.com/cuda-downloads)
-- [Deformable Convolution v2](https://arxiv.org/abs/1811.11168), we adopt [CharlesShang's implementation](https://github.com/CharlesShang/DCNv2) in the submodule.
 - Python packages: `pip install numpy opencv-python lmdb pyyaml pickle5 matplotlib seaborn`
 
 ## Get Started
@@ -69,21 +68,8 @@ Zooming Slow-Mo achieves state-of-the-art performance by PSNR and SSIM in Vid4, 
 
 Install the required packages: `pip install -r requirements.txt`
 
-First, make sure your machine has a GPU, which is required for the DCNv2 module.
+We'll call the directory that you cloned Zooming Slow-Mo as ZOOMING_ROOT.
 
-1. Clone the Zooming Slow-Mo repository. We'll call the directory that you cloned Zooming Slow-Mo as ZOOMING_ROOT.
-
-```Shell
-git clone --recursive https://github.com/Mukosame/Zooming-Slow-Mo-CVPR-2020.git
-```
-
-2. Compile the DCNv2:
-
-```Shell
-cd $ZOOMING_ROOT/codes/models/modules/DCNv2
-bash make.sh         # build
-python test.py    # run examples and gradient check
-```
 
 Please make sure the test script finishes successfully without any errors before running the following experiments.
 

@@ -18,19 +18,6 @@ class PyramidFusion(nn.Module):
         self.inputs_fusions, self.offsets_fusions = self.offsets_fusions[:1], self.offsets_fusions[1:]
         for _ in range(num_levels - 1):
             self.inputs_fusions.append(Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs))
-
-        # self.inputs_fusions = nn.ModuleList([
-        #     nn.Sequential(Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs),
-        #                   Conv2dNormActivation(multiplier, multiplier, **common_kwargs))
-        # ])
-        # for _ in range(num_levels - 1):
-        #     self.inputs_fusions.append(Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs))
-        #
-        # self.offsets_fusions = nn.ModuleList([
-        #     nn.Sequential(Conv2dNormActivation(multiplier * 2, multiplier, **common_kwargs),
-        #                   Conv2dNormActivation(multiplier, multiplier, **common_kwargs))
-        #     for _ in range(num_levels - 1)])
-
         self.upsample2x = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=False)
 
         self.warp_networks = nn.ModuleList([WarpNet(multiplier,
@@ -56,22 +43,6 @@ class PyramidFusion(nn.Module):
             x = torch.cat((offset, x * 2), dim=1)
             x = fusion(x)
             offsets.append(x)
-
-        # import numpy as np
-        # l1 = np.load("L1_offset.npy")
-        # l2 = np.load("L2_offset.npy")
-        # l3 = np.load("L3_offset.npy")
-        #
-        # l1_pa = np.load("L1_fea_pyr.npy")
-        # l2_pa = np.load("L2_fea_pyr.npy")
-        # l3_pa = np.load("L3_fea_pyr.npy")
-        # raw1 = np.load("L1_fea_raw.npy")
-        # raw2 = np.load("L2_fea_raw.npy")
-        # raw3 = np.load("L3_fea.npy")
-        #
-        # fea1 = np.load("L1_fea.npy")
-        # fea2 = np.load("L2_fea.npy")
-        # fea3 = np.load("L3_fea.npy")
 
         pyramid = [warp(level, offset) for warp, level, offset in zip(self.warp_networks, pyramid_a, offsets)]
         x = self.leaky_relu01(pyramid[0])
